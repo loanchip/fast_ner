@@ -25,16 +25,35 @@ def perform_flashtext_ner(input_data, csv_data={}):
 
     return ner_data
 
-def flashtext_test(data):
+def flashtext_test_big_data(data, queries, return_output=False):
+    ''' Exact matching
+    Testing for movie titles with shorter and longer names for movies in the same series
+    '''
+    outputs = []
+    keyword_processor = KeywordProcessor()
+    for entity_name in data:
+        for entity in data[entity_name]:
+            entity = ' '.join(string_cleaning(entity))
+            keyword_processor.add_keyword(entity)
+    
+    for query in queries:
+        query = ' '.join(string_cleaning(query))
+        output = keyword_processor.extract_keywords(sentence=query, span_info=True)
+        if return_output: outputs.append(output)
+
+    if return_output: return outputs
+
+def flashtext_test(data, return_output=False):
     ''' Exact matching
     Testing for movie titles with shorter and longer names for movies in the same series
     '''
     input_string='Have you watched Naruto or Naruto Shippuden : Blood Prison?'
-    expected_output = "{'movies': [[('naruto', 17, 23), ('naruto shippuden blood prison', 27, 56)]]}"
+    #expected_output = "{'movies': [[('naruto', 17, 23), ('naruto shippuden blood prison', 27, 56)]]}"
     output = perform_flashtext_ner(input_data=input_string,csv_data=data)
     #print(output)
     #print('Test: ',end='')
     #check_output(str(output), expected_output)
+    if return_output: return output
 
 def main():
     csv_data = load_csv_data()

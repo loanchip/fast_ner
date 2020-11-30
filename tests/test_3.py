@@ -7,7 +7,7 @@ from tests.check_output import check_output
 
 def main():
     #add_new_entity(entity_name='movies') # refresh data
-    data = load_dict_data()
+    data = load_dict_data(selected_entities=['movies'])
     input_string='Have you watched Naruto or Naruto Shippuden : Blood Prison?'
     expected_output = "{'movies': [(['naruto'], 3, 4), (['naruto'], 5, 6), (['naruto', 'shippuden', 'blood', 'prison'], 5, 9)]}"
 

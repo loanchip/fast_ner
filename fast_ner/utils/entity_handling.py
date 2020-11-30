@@ -36,13 +36,25 @@ def insert_entity(dict_, entity):
     
     return dict_
 
-def create_dict_from_csv(entity_name):
-    data = pd.read_csv('fast_ner/data/'+entity_name+'.csv')
-    dict_ = {}
-    for entity in data.item:
-        dict_ = insert_entity(dict_, entity)
-    with open('fast_ner/data/'+entity_name+'.pickle', 'wb') as handle:
-        pickle.dump(dict_, handle)
+def create_dict_from_csv(entity_name=None):
+    if entity_name:
+        data = pd.read_csv('fast_ner/data/'+entity_name+'.csv')
+        dict_ = {}
+        for entity in data.item:
+            dict_ = insert_entity(dict_, entity)
+        with open('fast_ner/data/'+entity_name+'.pickle', 'wb') as handle:
+            pickle.dump(dict_, handle)
+    else:
+        files_list = [files_list for _,_,files_list in walk(top='fast_ner/data/')][0]
+        for file_name in files_list:
+            if file_name[-4:] == '.csv':
+                entity_name = file_name[:-4]
+                data = pd.read_csv('fast_ner/data/'+entity_name+'.csv')
+                dict_ = {}
+                for entity in data.item:
+                    dict_ = insert_entity(dict_, entity)
+                with open('fast_ner/data/'+entity_name+'.pickle', 'wb') as handle:
+                    pickle.dump(dict_, handle)
 
 def load_entities(selected_entities=None, from_pickle=False, from_csv=False):
     entity_data = {}

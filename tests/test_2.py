@@ -7,8 +7,8 @@ from tests.check_output import check_output
 
 def main():
     #add_new_entity(entity_name='movies')
-    data = load_dict_data()
-    csv_data = load_csv_data()
+    data = load_dict_data(selected_entities=['movies'])
+    csv_data = load_csv_data(selected_entities=['movies'])
     input_string='I would like to watch Travel Mates 2 or Marc Maron: Too Real right now.'
     expected_output = "{'movies': [(['travel', 'mates', '2'], 5, 8), (['marc', 'maron', 'too', 'real'], 9, 13)], 'fuzzy_matches': {'movies': [('Marc Maron: Too Real', 0.569703524874188), ('Travel Mates 2', 0.43260186577568377)]}}"
     
