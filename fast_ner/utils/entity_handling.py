@@ -1,6 +1,6 @@
 import pandas as pd
 import pickle
-import os
+from os import walk
 
 from fast_ner.utils.string_handling import string_cleaning
 
@@ -19,17 +19,20 @@ def insert_entity(dict_, entity):
     if count == length: 
         current_dict[1] = 1
     else:
-        loc = length-1
+        loc = length-1 # last word
         
-        old_dict = {}
-        old_dict[clean_entity[loc]] = {1:1}
-        loc -= 1
-        while(count<loc): # add deepcopy if issues
-            new_dict = {}
-            new_dict[clean_entity[loc]] = old_dict
-            old_dict = new_dict
+        if count == loc: # only one word left
+            current_dict[clean_entity[loc]] = {1:1}
+        else:
+            old_dict = {}
+            old_dict[clean_entity[loc]] = {1:1}
             loc -= 1
-        current_dict[clean_entity[loc]] = old_dict
+            while(count<loc):
+                new_dict = {}
+                new_dict[clean_entity[loc]] = old_dict
+                old_dict = new_dict
+                loc -= 1
+            current_dict[clean_entity[loc]] = old_dict
     
     return dict_
 
@@ -41,19 +44,33 @@ def create_dict_from_csv(entity_name):
     with open('fast_ner/data/'+entity_name+'.pickle', 'wb') as handle:
         pickle.dump(dict_, handle)
 
-def load_entities(selected_entities=None):
+def load_entities(selected_entities=None, from_pickle=False, from_csv=False):
     entity_data = {}
 
-    if selected_entities:
-        for entity in selected_entities:
-            with open('fast_ner/data/'+entity+'.pickle', 'rb') as handle:
-                entity_data[entity] = pickle.load(handle)
-    else: # load all available entities
-        files_list = [files_list for _,_,files_list in os.walk(top='fast_ner/data/')][0]
-        for file_name in files_list:
-            if file_name[-7:] == '.pickle':
-                entity = file_name[:-7]
+    if from_pickle:
+        if selected_entities:
+            for entity in selected_entities:
                 with open('fast_ner/data/'+entity+'.pickle', 'rb') as handle:
                     entity_data[entity] = pickle.load(handle)
+        else: # load all available entities
+            files_list = [files_list for _,_,files_list in walk(top='fast_ner/data/')][0]
+            for file_name in files_list:
+                if file_name[-7:] == '.pickle':
+                    entity = file_name[:-7]
+                    with open('fast_ner/data/'+entity+'.pickle', 'rb') as handle:
+                        entity_data[entity] = pickle.load(handle)
+    
+    elif from_csv:
+        if selected_entities:
+            for entity in selected_entities:
+                with open('fast_ner/data/'+entity+'.csv', 'rb') as handle:
+                    entity_data[entity] = list(pd.read_csv(handle)['item'])
+        else: # load all available entities
+            files_list = [files_list for _,_,files_list in walk(top='fast_ner/data/')][0]
+            for file_name in files_list:
+                if file_name[-4:] == '.csv':
+                    entity = file_name[:-4]
+                    with open('fast_ner/data/'+entity+'.csv', 'rb') as handle:
+                        entity_data[entity] = list(pd.read_csv(handle)['item'])
 
     return entity_data
