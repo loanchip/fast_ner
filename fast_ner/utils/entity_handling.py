@@ -72,7 +72,7 @@ def insert_entity(dict_, entity):
     
     return dict_
 
-def create_dict_from_csv(entity_name=None):
+def create_dict_from_csv(entity_name=None, path_to_data_folder=None):
     """Creates a dictionary .pickle file from .csv file of the specified entity.
 
     Based on the given entity name, loads up the respective .csv file
@@ -83,6 +83,10 @@ def create_dict_from_csv(entity_name=None):
         entity_name: A string specifying the entity name for which.
             the dictionary needs to be generated. Default is generate .pickle
             files for all available entity .csv files.
+        path_to_data_folder: A string specifying the absolute path to 
+            the data folder that contains the entity dataset files. The created 
+            dictionary (.pickle) file will be stored in the same folder.
+            By default, uses the built-in entity datasets.
 
     Writes:
         A .pickle file containing a dictionary mapping first word of entity values
@@ -106,31 +110,35 @@ def create_dict_from_csv(entity_name=None):
         If a .csv file corresponding to the given entity name is not found
         in storage, throws error.
     """
+    if path_to_data_folder: path = path_to_data_folder
+    else: path = 'fast_ner/data/'
+
     if entity_name:
-        data = pd.read_csv('fast_ner/data/'+entity_name+'.csv')
+        data = pd.read_csv(path+entity_name+'.csv')
         dict_ = {}
         # insert all entity values of the particular entity type into the dictionary
         for entity in data.item:
             dict_ = insert_entity(dict_, entity)
         # save the dictionary to a .pickle file
-        with open('fast_ner/data/'+entity_name+'.pickle', 'wb') as handle:
+        with open(path+entity_name+'.pickle', 'wb') as handle:
             pickle.dump(dict_, handle)
     else:
-        files_list = [files_list for _,_,files_list in walk(top='fast_ner/data/')][0]
+        files_list = [files_list for _,_,files_list in walk(top=path)][0]
         # get all available entity types
         for file_name in files_list:
             if file_name[-4:] == '.csv':
                 entity_name = file_name[:-4]
-                data = pd.read_csv('fast_ner/data/'+entity_name+'.csv')
+                data = pd.read_csv(path+entity_name+'.csv')
                 dict_ = {}
                 # insert all entity values of the particular entity type into the dictionary
                 for entity in data.item:
                     dict_ = insert_entity(dict_, entity)
                 # save the dictionary to a .pickle file
-                with open('fast_ner/data/'+entity_name+'.pickle', 'wb') as handle:
+                with open(path+entity_name+'.pickle', 'wb') as handle:
                     pickle.dump(dict_, handle)
 
-def load_entities(selected_entities=None, from_pickle=False, from_csv=False):
+def load_entities(selected_entities=None, from_pickle=False, from_csv=False, 
+                    path_to_data_folder=None):
     """Loads up data from selected .pickle or .csv files.
 
     Based on the selected entities, loads data from storage,
@@ -143,6 +151,9 @@ def load_entities(selected_entities=None, from_pickle=False, from_csv=False):
             of selected entities.
         from_csv: If True, loads data from .csv files
             of selected entities.
+        path_to_data_folder: A string specifying the absolute path to 
+            the data folder that contains the entity dataset files.
+            By default, uses the built-in entity datasets.
 
     Returns:
         A dictionary mapping entity type (key) to all entity values of 
@@ -176,30 +187,33 @@ def load_entities(selected_entities=None, from_pickle=False, from_csv=False):
     """
     entity_data = {}
 
+    if path_to_data_folder: path = path_to_data_folder
+    else: path = 'fast_ner/data/'
+
     if from_pickle:
         if selected_entities:
             for entity in selected_entities:
-                with open('fast_ner/data/'+entity+'.pickle', 'rb') as handle:
+                with open(path+entity+'.pickle', 'rb') as handle:
                     entity_data[entity] = pickle.load(handle)
         else: # load all available entities
-            files_list = [files_list for _,_,files_list in walk(top='fast_ner/data/')][0]
+            files_list = [files_list for _,_,files_list in walk(top=path)][0]
             for file_name in files_list:
                 if file_name[-7:] == '.pickle':
                     entity = file_name[:-7]
-                    with open('fast_ner/data/'+entity+'.pickle', 'rb') as handle:
+                    with open(path+entity+'.pickle', 'rb') as handle:
                         entity_data[entity] = pickle.load(handle)
     
     elif from_csv:
         if selected_entities:
             for entity in selected_entities:
-                with open('fast_ner/data/'+entity+'.csv', 'rb') as handle:
+                with open(path+entity+'.csv', 'rb') as handle:
                     entity_data[entity] = list(pd.read_csv(handle)['item'])
         else: # load all available entities
-            files_list = [files_list for _,_,files_list in walk(top='fast_ner/data/')][0]
+            files_list = [files_list for _,_,files_list in walk(top=path)][0]
             for file_name in files_list:
                 if file_name[-4:] == '.csv':
                     entity = file_name[:-4]
-                    with open('fast_ner/data/'+entity+'.csv', 'rb') as handle:
+                    with open(path+entity+'.csv', 'rb') as handle:
                         entity_data[entity] = list(pd.read_csv(handle)['item'])
 
     return entity_data

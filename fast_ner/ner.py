@@ -3,7 +3,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from fast_ner.utils.entity_handling import create_dict_from_csv, load_entities
 from fast_ner.utils.string_handling import string_cleaning
 
-def add_new_entity(entity_name=None):
+def add_new_entity(entity_name=None, path_to_data_folder=None):
     """Creates a dictionary .pickle file from .csv file of the specified entity.
 
     Based on the given entity name, loads up the respective .csv file
@@ -14,6 +14,9 @@ def add_new_entity(entity_name=None):
         entity_name: A string specifying the entity name for which.
             the dictionary needs to be generated. Default is generate .pickle
             files for all available entity .csv files.
+        path_to_data_folder: A string specifying the absolute path to 
+            the data folder that contains the entity dataset files.
+            By default, uses the built-in entity datasets.
 
     Writes:
         A .pickle file containing a dictionary mapping first word of entity values
@@ -37,9 +40,9 @@ def add_new_entity(entity_name=None):
         If a .csv file corresponding to the given entity name is not found
         in storage, throws error.
     """
-    create_dict_from_csv(entity_name)
+    create_dict_from_csv(entity_name=entity_name, path_to_data_folder=path_to_data_folder)
 
-def load_dict_data(selected_entities=None):
+def load_dict_data(selected_entities=None, path_to_data_folder=None):
     """Loads up data from .pickle file for the selected entities.
 
     Based on the selected entities, loads data from storage,
@@ -48,6 +51,9 @@ def load_dict_data(selected_entities=None):
     Args:
         selected_entities: A list of string entity names to be loaded.
             Default is load all available entitites.
+        path_to_data_folder: A string specifying the absolute path to 
+            the data folder that contains the entity dataset files.
+            By default, uses the built-in entity datasets.
 
     Returns:
         A dictionary mapping entity type (key) to all entity values of 
@@ -69,9 +75,10 @@ def load_dict_data(selected_entities=None):
         are not found, or if no .pickle files are found, returns an empty 
         dictionary.
     """
-    return load_entities(selected_entities=selected_entities, from_pickle=True)
+    return load_entities(selected_entities=selected_entities, from_pickle=True,
+                            path_to_data_folder=path_to_data_folder)
 
-def load_csv_data(selected_entities=None):
+def load_csv_data(selected_entities=None, path_to_data_folder=None):
     """Loads up data from .csv file for the selected entities.
 
     Based on the selected entities, loads data from storage,
@@ -80,6 +87,9 @@ def load_csv_data(selected_entities=None):
     Args:
         selected_entities: A list of string entity names to be loaded.
             Default is load all available entitites.
+        path_to_data_folder: A string specifying the absolute path to 
+            the data folder that contains the entity dataset files.
+            By default, uses the built-in entity datasets.
 
     Returns:
         A dictionary mapping entity type (key) to all entity values of 
@@ -91,7 +101,8 @@ def load_csv_data(selected_entities=None):
         are not found, or if no .csv files are found, returns an empty 
         dictionary.
     """
-    return load_entities(selected_entities=selected_entities, from_csv=True)
+    return load_entities(selected_entities=selected_entities, from_csv=True, 
+                            path_to_data_folder=path_to_data_folder)
 
 def extract_entities(input_data_tokens, entity_dict):
     """Extracts valid entities present in the input query.
@@ -233,7 +244,7 @@ def perform_ner(input_data, entity_data, fuzzy_matching=False, csv_data=None):
         else:
             fuzzy_matches = {}
             # perform extraction of entities on the input query for each entity type
-            for entity in entity_data:
+            for entity in csv_data:
                 detected_entities = perform_fuzzy_matching(input_data=input_data, entity_list=csv_data[entity])
                 if detected_entities: fuzzy_matches[entity] = detected_entities
             ner_data['fuzzy_matches'] = fuzzy_matches
