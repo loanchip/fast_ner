@@ -27,7 +27,7 @@ setup(
     keywords='nlp, ner, keyword-extraction, fuzzy-matching, entity-detection', 
     packages=['fast_ner'], 
     python_requires='>=3.5', 
-    install_requires=['pandas>=1.0.5', 'sklearn>=0.23.1'], 
+    install_requires=['pandas>=1.0.5', 'scikit-learn>=0.23.1'], 
     project_urls={ 
         'Bug Reports': 'https://github.com/loanchip/fast_ner/issues', 
         'Source': 'https://github.com/loanchip/fast_ner/', 
