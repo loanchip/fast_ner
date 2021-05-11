@@ -2,7 +2,7 @@ import pandas as pd
 import pickle
 from os import walk
 
-from fast_ner.utils.string_handling import string_cleaning
+from . string_handling import string_cleaning
 
 def insert_entity(dict_, entity):
     """Inserts a new entity value into a dictionary.

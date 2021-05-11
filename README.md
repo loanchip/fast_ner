@@ -19,6 +19,11 @@ Navigate to the directory
 ``` bash
 python setup.py install
 ```   
+OR To use it as a Docker Container  
+``` bash
+docker-compose up
+```  
+   
 
 ## Usage 
 ```python

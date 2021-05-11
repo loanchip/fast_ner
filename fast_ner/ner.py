@@ -1,7 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from fast_ner.utils.entity_handling import create_dict_from_csv, load_entities
-from fast_ner.utils.string_handling import string_cleaning
+from . utils.entity_handling import create_dict_from_csv, load_entities
+from . utils.string_handling import string_cleaning
 
 def add_new_entity(entity_name=None, path_to_data_folder=None):
     """Creates a dictionary .pickle file from .csv file of the specified entity.
@@ -197,7 +197,7 @@ def perform_fuzzy_matching(input_data, entity_list):
 
     return detected_entities
 
-def perform_ner(input_data, entity_data, fuzzy_matching=False, csv_data=None):
+def perform_ner(input_data, entity_data=None, fuzzy_matching=False, csv_data=None):
     """Parses input query to search for named entities.
 
     Parses the given input stirng to find valid entity values, based 
@@ -206,7 +206,7 @@ def perform_ner(input_data, entity_data, fuzzy_matching=False, csv_data=None):
     Args:
         input_data: A string of input query to be parsed.
         entity_data: A dictionary of dictionary, of entity values for multiple 
-            entity types.
+            entity types. If None given, loads all available entities.
         fuzzy_matching: If True, performs fuzzy matching of entities based 
             on TFIDF and cosine_similarity. Default is False.
         csv_data: A dictionary of lists, containing entity values for multiple
@@ -233,6 +233,10 @@ def perform_ner(input_data, entity_data, fuzzy_matching=False, csv_data=None):
     input_data_tokens = string_cleaning(input_data)
     ner_data = {}
     
+    # load all available entity data if not provided
+    if not entity_data:
+        entity_data = load_dict_data()
+
     # perform extraction of entities on the input query for each entity type
     for entity in entity_data:
         detected_entities = extract_entities(input_data_tokens=input_data_tokens,entity_dict=entity_data[entity])
