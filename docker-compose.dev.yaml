@@ -1,0 +1,12 @@
+version: "3.1"
+
+services:
+  fast_ner:
+    image: fast_ner:1.0
+    build: .
+    ports:
+      - "5000:5000"
+      volumes:
+        - .:/fast_ner
+      environment:
+        FLASK_ENV: development
