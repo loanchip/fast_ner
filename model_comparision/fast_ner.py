@@ -1,6 +1,5 @@
 from fast_ner.ner import perform_ner, load_csv_data
 from fast_ner.utils.entity_handling import insert_entity
-from tests.check_output import check_output
 
 def fast_ner_test_big_data(data, queries, return_output=False):
     mega_dict = {}
@@ -30,7 +29,7 @@ def fast_ner_test(data, return_output=False):
     input_string='Have you watched Naruto or Naruto Shippuden : Blood Prison?'
     output = perform_ner(input_data=input_string,entity_data=mega_dict)
     #print(output)
-    if return_output:return output
+    if return_output: return output
 
 def main():
     csv_data = load_csv_data()

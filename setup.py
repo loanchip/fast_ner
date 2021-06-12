@@ -7,7 +7,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='fast_ner', 
-    version='0.0.1', 
+    version='1.0.0', 
     description='A Fast Named-Entity Recognition module', 
     long_description=long_description, 
     long_description_content_type='text/markdown', 

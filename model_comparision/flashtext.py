@@ -1,7 +1,6 @@
 from flashtext import KeywordProcessor
 from fast_ner.utils.string_handling import string_cleaning
 from fast_ner.ner import load_csv_data
-from tests.check_output import check_output
 
 def extract_entities(input_data, entity_list=[]):
     detected_entities = []
@@ -51,8 +50,7 @@ def flashtext_test(data, return_output=False):
     #expected_output = "{'movies': [[('naruto', 17, 23), ('naruto shippuden blood prison', 27, 56)]]}"
     output = perform_flashtext_ner(input_data=input_string,csv_data=data)
     #print(output)
-    #print('Test: ',end='')
-    #check_output(str(output), expected_output)
+    #assert(str(output) == expected_output)
     if return_output: return output
 
 def main():
