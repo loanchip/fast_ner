@@ -20,5 +20,5 @@ def string_cleaning(entity):
     entity = entity.lower()
     entity += ' '
     for p in punctuation:
-        entity = entity.replace(p,' ')
+        entity = entity.replace(p, ' ')
     return entity.split()
