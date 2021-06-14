@@ -1,5 +1,7 @@
 # fast_ner
 
+[![Python application](https://github.com/loanchip/fast_ner/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/loanchip/fast_ner/actions/workflows/python-app.yml)
+
 A fast Named-Entity Recognition module
 
 ## Description
