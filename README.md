@@ -25,8 +25,8 @@ OR To use it as a Docker Container
 ``` bash
 docker-compose up
 ```  
-   
-
+Docker Hub Image: ```loanchip/fast_ner```  
+  
 ## Usage 
 ```python
 from fast_ner import ner
