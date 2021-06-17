@@ -134,19 +134,49 @@ def test_multiple_fuzzy_match():
     assert(output == expected_output)
 
 
-def reload_data():
+def test_exact_match_all_available():
+    ''' Exact matching
+    Testing for single word movie titles, multi-word movie titles
+    and titles with special characters
+    '''
+    input_string = ('I would like to watch Travel Mates 2, Circle or Marc '
+                    'Maron: Too Real right now.')
+    expected_output = {
+        'ratings_average': [
+            (['like'], 2, 3)
+        ],
+        'review': [
+            (['like'], 2, 3),
+            (['watch'], 4, 5)
+        ],
+        'year': [
+            (['right', 'now'], 14, 16)
+        ],
+        'movies': [
+            (['travel', 'mates', '2'], 5, 8),
+            (['circle'], 8, 9),
+            (['marc', 'maron', 'too', 'real'], 10, 14)
+        ]
+    }
+    output = perform_ner(input_data=input_string)
+
+    assert(output == expected_output)
+
+
+def test_reload_data():
     ''' Reconstruct dictionary
     '''
     add_new_entity()
 
 
 def main():
-    reload_data()
+    test_reload_data()
 
     test_exact_match()
     test_fuzzy_match()
     test_multiple_exact_match()
     test_multiple_fuzzy_match()
+    test_exact_match_all_available()
 
 
 if __name__ == "__main__":
