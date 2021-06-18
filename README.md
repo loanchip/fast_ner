@@ -1,6 +1,7 @@
 # fast_ner
 
 [![Build](https://github.com/loanchip/fast_ner/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/loanchip/fast_ner/actions/workflows/python-app.yml)
+[![codecov](https://codecov.io/gh/loanchip/fast_ner/branch/main/graph/badge.svg?token=VCPCEQAEPF)](https://codecov.io/gh/loanchip/fast_ner)
 
 A fast Named-Entity Recognition module
 
